@@ -1,11 +1,14 @@
 #include "Alloc.h"
-
-// Non posso farlo ricorsivo senza parametri.
+// variabili globali qui
+int i = 0;
+pcb_t *temp = pcbfree_h;
+/* Ricorsivo v1, da controllare.
+Scorro lista pcbfree_h tramite temp.*/
 void initPcbs() {
-	int i=0;
-	pcb_t *temp = *pcbfree_h;
-	for(i; i < MAXPROC-1; i++){
-		*temp = pcbFree_table[i];
-		temp->p_next = pcbFree_table[i+1];
+	if (i < MAXPROC) {  
+		temp = pcbFree_table[i];
+		temp = temp->p_next;
+		i++;
+		initPcbs();
 	}
 }
