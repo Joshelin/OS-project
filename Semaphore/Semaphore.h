@@ -1,11 +1,11 @@
 #include "../PCB.h"
 
-const int MAXSEMD=;
-const int ASHDSIZE=;
+#define MAXSEMD=;
+#define ASHDSIZE=;
 /* Ad  ogni  semaforo  è  associato  un  descrittore (SEMD)  con  la  struttura  seguente.
 s_key è l'indirizzo della variabile intera che contiene il valore del semaforo.
 L'indirizzo di s_key serve come identificatore del semaforo.*/
-typedef struct semd_t {
+typedef struct {
 	struct semd_t *s_next;
 	int *s_key;
 	struct pcb_t *s_procQ;
