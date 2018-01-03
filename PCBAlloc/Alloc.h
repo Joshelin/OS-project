@@ -1,8 +1,11 @@
 #include "../PCB.h"
 
-// pcbFree:  lista  dei  PCB  che  sono  liberi o  inutilizzati.
-pcb_t *pcbfree_h; //  testa  della  lista pcbFree.  
-pcb_t pcbFree_table[MAXPROC]; // array  di PCB  con dimensione MAXPROC.
+/* pcbFree:  lista  dei  PCB  che  sono  liberi o  inutilizzati.
+Testa  della  lista pcbFree.*/
+pcb_t *pcbfree_h; 
+
+// array  di PCB  con dimensione MAXPROC.
+pcb_t pcbFree_table[MAXPROC];
 
 /* Inizializza la pcbFree in modo da contenere tutti gli elementi della pcbFree_table.
 Questo metodo deve essere chiamato una volta sola in fase di inizializzazione della struttura dati.*/
