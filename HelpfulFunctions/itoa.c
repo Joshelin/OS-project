@@ -56,18 +56,3 @@ void u_itoa(char str[], int num, int i){
 	}
 
 }
-
-//per provare funzioni
-int main(int argc, char* argv[]){
-
-	char stringa[5] = {'m','i','n','k'};
-	int n = 67857 ;
-	int m = u_cifre(n);
-	char stringa_di_cifre[m+1] ;
-	u_reverse(stringa,0,3);
-	u_itoa(stringa_di_cifre,n,0);
-	tprint(stringa);
-	tprint("\n");
-	tprint(stringa_di_cifre);
-	return 0 ;
-}
