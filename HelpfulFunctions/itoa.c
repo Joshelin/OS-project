@@ -1,4 +1,3 @@
-#include "/usr/include/uarm/libuarm.h"
 #include "itoa.h"
 
 void u_reverse(char str[], int in, int fin){
