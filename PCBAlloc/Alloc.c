@@ -12,3 +12,8 @@ void initPcbs() {
 		initPcbs();
 	}
 }
+
+int main(int argc, char* argv[]){
+
+	initPcbs();
+}

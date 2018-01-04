@@ -5,7 +5,7 @@
 – Gestone  di  una  Active  Semaphore Hash Table (ASHT), che  gestisce i processi bloccati sui semafori. "/Semaphore/Semaphore.h"  
 ASSUNZIONE:  non  ci sono più  di  MAXPROC processi concorrenti  in YAEOS.*/
 
-
+typedef int* state_t ;
 
 typedef struct pcb_t{
 	struct pcb_t *p_next;
