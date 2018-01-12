@@ -1,7 +1,10 @@
 #include "../PCB.h"
 
-#define MAXSEMD=;
-#define ASHDSIZE=;
+#ifndef SEMAPHORE_H
+#define SEMAPHORE_H 
+
+#define MAXSEMD 100
+#define ASHDSIZE 20
 /* Ad  ogni  semaforo  è  associato  un  descrittore (SEMD)  con  la  struttura  seguente.
 s_key è l'indirizzo della variabile intera che contiene il valore del semaforo.
 L'indirizzo di s_key serve come identificatore del semaforo.*/
@@ -51,3 +54,5 @@ void? outChildBlocked(pcb_t *p);
 /* Inizializza la lista dei semdFree in modo da contenere tutti gli elementi della semdTable.
 Questo metodo viene invocato una volta sola durante l’inizializzazione della struttura dati.*/
 void initASL();
+
+#endif
