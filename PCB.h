@@ -1,5 +1,3 @@
-	
-
 /* Il gestore delle code implementa quattro funzionalità  relative ai PCB:  
 – Allocazione e deallocazione dei PCB. "/PCBAlloc/PCBAlloc.h"  
 – Gestione delle code dei  PCB. "/PCBQueue/Queue.h"
@@ -8,9 +6,9 @@
 ASSUNZIONE:  non  ci sono più  di  MAXPROC processi concorrenti  in YAEOS.*/
 #ifndef PCB_H
 #define PCB_H
-
-#define true 1 
-#define false 0
+#define NULL 0
+#define TRUE 1 
+#define FALSE 0
 #define bool int 
 
 typedef int* state_t ;
