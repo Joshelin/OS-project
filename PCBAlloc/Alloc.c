@@ -80,6 +80,3 @@ pcb_t *allocPcb(){
 			return temp;
 		}
 }
-int main(void)
-{
-}
