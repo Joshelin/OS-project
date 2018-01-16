@@ -47,7 +47,6 @@ void freePcb(pcb_t *p){
 		}else{ // la lista non ha altri pcb e non ho trovato conflitti. Resetto start e flag per prossimi freePcb.
 			temp->p_next = p;
 			start = TRUE;
-			flag = TRUE;
 		}
 	}
 }
@@ -71,6 +70,7 @@ pcb_t *allocPcb(){
 		}else{ // rimuovo la testa dalla lista dei pcbfree.
 			temp = pcbfree_h;
 			pcbfree_h = pcbfree_h->p_next;
+			temp->p_next = NULL;
 			temp->p_parent = NULL;
 			temp->p_first_child = NULL;
 			temp->p_sib = NULL;
