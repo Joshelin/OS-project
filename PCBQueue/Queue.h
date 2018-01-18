@@ -2,8 +2,8 @@
 
 /* Inserisce l’elemento puntato da p nella coda dei processi puntata da head.
 L’inserimento deve avvenire tenendo conto della priorità di ciascun pcb (campo  p- ‐>priority).
-La coda dei processi deve essere ordinata in base alla priorità dei PCB, in ordine decrescente (i.e. l’elemento di testa è l’elemento con la priorità più alta).*/  
-void insertProcQ(pcb_t **head, pcb *p);
+La coda dei processi deve essere ordinata in base alla priorità dei PCB, in ordine decrescente (i.e. l'elemento di testa è l'elemento con la prioprità più alta).*/
+void insertProcQ(pcb_t **head, pcb_t *p);
 
 /* Restituisce l’elemento di testa della coda dei processi da head, SENZA RIMUOVERLO.
 Ritorna NULL se la coda non ha elementi.*/
