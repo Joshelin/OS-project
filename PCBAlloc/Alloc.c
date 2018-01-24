@@ -1,5 +1,5 @@
 #include "Alloc.h"
-#include "uARMtypes.h"
+#include "../uARMtypes.h"
 #define DEBUG FALSE;
 // variabili globali qui
 int i = 0;
