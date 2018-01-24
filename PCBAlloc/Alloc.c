@@ -1,4 +1,5 @@
 #include "Alloc.h"
+#include "uARMtypes.h"
 #define DEBUG FALSE;
 // variabili globali qui
 int i = 0;
@@ -63,8 +64,29 @@ pcb_t *allocPcb(){
 			temp->p_parent = NULL;
 			temp->p_first_child = NULL;
 			temp->p_sib = NULL;
-			temp->p_s = NULL;
-			temp->priority = NULL;
+			temp->priority = 0;
+			temp->p_s.a1=0;
+			temp->p_s.a2=0;
+			temp->p_s.a3=0;
+			temp->p_s.a4=0;
+			temp->p_s.v1=0;
+			temp->p_s.v2=0;
+			temp->p_s.v3=0;
+			temp->p_s.v4=0;
+			temp->p_s.v5=0;
+			temp->p_s.v6=0;
+			temp->p_s.sl=0;
+			temp->p_s.fp=0;
+			temp->p_s.ip=0;
+			temp->p_s.sp=0;
+			temp->p_s.lr=0;
+			temp->p_s.pc=0;
+			temp->p_s.cpsr=0;
+			temp->p_s.CP15_Control=0;
+			temp->p_s.CP15_EntryHi=0;
+			temp->p_s.CP15_Cause=0;
+			temp->p_s.TOD_Hi=0;
+			temp->p_s.TOD_Low=0;
 			temp->p_semKey = NULL;
 			return temp;
 		}else{ // rimuovo la testa dalla lista dei pcbfree.
@@ -74,8 +96,29 @@ pcb_t *allocPcb(){
 			temp->p_parent = NULL;
 			temp->p_first_child = NULL;
 			temp->p_sib = NULL;
-			temp->p_s = NULL;
-			temp->priority = NULL;
+			temp->priority = 0;
+			temp->p_s.a1=0;
+			temp->p_s.a2=0;
+			temp->p_s.a3=0;
+			temp->p_s.a4=0;
+			temp->p_s.v1=0;
+			temp->p_s.v2=0;
+			temp->p_s.v3=0;
+			temp->p_s.v4=0;
+			temp->p_s.v5=0;
+			temp->p_s.v6=0;
+			temp->p_s.sl=0;
+			temp->p_s.fp=0;
+			temp->p_s.ip=0;
+			temp->p_s.sp=0;
+			temp->p_s.lr=0;
+			temp->p_s.pc=0;
+			temp->p_s.cpsr=0;
+			temp->p_s.CP15_Control=0;
+			temp->p_s.CP15_EntryHi=0;
+			temp->p_s.CP15_Cause=0;
+			temp->p_s.TOD_Hi=0;
+			temp->p_s.TOD_Low=0;
 			temp->p_semKey = NULL;
 			return temp;
 		}

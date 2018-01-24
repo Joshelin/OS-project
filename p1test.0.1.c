@@ -32,13 +32,12 @@
  *
  */
 
-#include <uARMconst.h>
-#include <uARMtypes.h>
-#include <libuarm.h>
-
+#include "uARMtypes.h"
+#include "libuarm.h"
+#include "Alloc.h"
 #include "const.h"
-#include "pcb.h"
-#include "asl.h"
+//#include "pcb.h"
+//#include "asl.h"
 
 #define	MAXSEM	MAXPROC
 

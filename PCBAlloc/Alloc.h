@@ -1,6 +1,5 @@
-#include "../PCB.h"
-
-#define MAXPROC 100
+#include "PCB.h"
+#include "const.h"
 
 /* pcbFree:  lista  dei  PCB  che  sono  liberi o  inutilizzati.
 Testa  della  lista pcbFree.*/
