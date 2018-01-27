@@ -34,8 +34,9 @@
 
 #include "uARMtypes.h"
 #include "libuarm.h"
-#include "PCBAlloc/Alloc.h"
+#include "./PCBAlloc/Alloc.h"
 #include "const.h"
+#include "./PCBQueue/Queue.h"
 //#include "pcb.h"
 //#include "asl.h"
 
@@ -109,33 +110,33 @@ int main() {
 
 	addokbuf("10 entries were added to the free PCB list\n");
 
-/*	addokbuf("We are going to test the insertProcQ function...\n");
+	addokbuf("We are going to test the insertProcQ function...\n");
 
 	/* insert 10 elements using different priorities. one max, one min prio
 	all the others default prio */
-/*	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 10; i++) {
 		q = allocPcb();
 		if ( q == NULL)
 			adderrbuf("ERROR: allocPcb(): unexpected NULL while insert\n");
 		switch (i) {
 			case 5:
-				q->p_priority=DEFAULT_PCB_PRIORITY;
+				q->priority=DEFAULT_PCB_PRIORITY;
 				proc=q;
 				break;
 			case 1:
-				q->p_priority=MAX_PCB_PRIORITY;
+				q->priority=MAX_PCB_PRIORITY;
 				maxproc = q;
 				break;
 			case 2:
-				q->p_priority=MIN_PCB_PRIORITY;
+				q->priority=MIN_PCB_PRIORITY;
 				minproc=q;
 				break;
 			default:
-				q->p_priority=DEFAULT_PCB_PRIORITY;
+				q->priority=DEFAULT_PCB_PRIORITY;
 				break;
 		}
 		/* insert the process in the queue */
-/*		insertProcQ(&head, q);
+		insertProcQ(&head, q);
 	}
 
 	addokbuf("Test insertProcQ: OK. Inserted 10 elements \n");
@@ -190,7 +191,7 @@ int main() {
 	addokbuf("Test insertProcQ(), removeProcQ(), headProcQ(), forallProcQ(), outProcQ(): OK\n");
 	addokbuf("Test process queues module: OK\n");
 
-	addokbuf("Testing process trees...\n");
+/*	addokbuf("Testing process trees...\n");
 
 	/*check that it has no child*/
 /*	q = removeChild(procp[2]);

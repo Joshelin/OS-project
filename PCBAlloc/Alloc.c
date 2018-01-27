@@ -33,6 +33,7 @@ void freePcb(pcb_t *p){
 			flag = TRUE;
 		}else{
 			temp = pcbfree_h;
+			flag = FALSE; 
 			start = FALSE;
 		}
 	}
