@@ -7,7 +7,7 @@ void insertProcQ(pcb_t **head, pcb_t *p);
 
 /* Restituisce l’elemento di testa della coda dei processi da head, SENZA RIMUOVERLO.
 Ritorna NULL se la coda non ha elementi.*/
-pcb_t headProcQ(pcb_t *head);
+pcb_t* headProcQ(pcb_t *head);
 
 /* Rimuove il primo elemento dalla coda dei processi puntata da head.
 Ritorna NULL se la coda è  vuota.

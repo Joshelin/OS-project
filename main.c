@@ -143,20 +143,20 @@ int main() {
 
 	addokbuf("Checking if the first element has max priority\n");
 	/* Check outProcQ and headProcQ */
-/*	if (headProcQ(head) != maxproc)
+		if (headProcQ(head) != maxproc)
 		adderrbuf("ERROR: headProcQ(qa) failed\n");
 	addokbuf("Done\n");
 
 	/* remove an element */
-/*	addokbuf("Removing an element. Testing outProcQ\n");
+	addokbuf("Removing an element. Testing outProcQ\n");
 	q=outProcQ(&head, proc);
 	if ((q == NULL) || (q != proc))
 		adderrbuf("ERROR: outProcQ(&qa, proc) failed to remove the entry\n");
 	freePcb(q); /* return the element to the free list */
-/*	addokbuf("Done\n");
+	addokbuf("Done\n");
 
 	/* Removing the first element from ProcQ */
-/*	addokbuf("Removing the first element. Testing removeProcQ\n");
+	addokbuf("Removing the first element. Testing removeProcQ\n");
 	q = removeProcQ(&head);
 	if (q == NULL || q != maxproc)
 		adderrbuf("ERROR: removeProcQ(&qa, midproc) failed to remove the elements in the right order\n");
@@ -165,7 +165,7 @@ int main() {
 
 	/* we inserted 10 elements and removed 2. Now let us remove the
 	remaining elements and check if the last one has the min prio */
-/*	addokbuf("Testing removeProcQ ...   \n");
+	addokbuf("Testing removeProcQ ...   \n");
 	for (i = 0; i < 7; i++) {
 		if ((q = removeProcQ(&head)) == NULL)
 			adderrbuf("removeProcQ(&qa): unexpected NULL\n");

@@ -1,6 +1,5 @@
 #include "Alloc.h"
 #include "../uARMtypes.h"
-#define DEBUG FALSE;
 // variabili globali qui
 int i = 0;
 pcb_t *temp;
