@@ -173,10 +173,10 @@ int main() {
 	}
 
 	/* keeping track of the last element */
-/*	q=headProcQ(head);
+	q=headProcQ(head);
 	addokbuf("Applying a function to all the elements of the list. Testing forallProcQ\n");
 	/* there should be just one element inside the list. i'm going to remove by using the forallProcQ instruction */
-/*	my_counter_process = 0;
+	my_counter_process = 0;
 	forallProcQ(head, increment_counter , &my_counter_process);
 	if(my_counter_process != 1)
 		adderrbuf("ERROR: forallProcQ(): failed on last entry\n");

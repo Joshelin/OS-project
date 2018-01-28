@@ -67,3 +67,12 @@ pcb_t* outProcQ(pcb_t **head, pcb_t *p){
 			return outProcQ(&((*head)->p_next),p) ;
 	}
 }
+
+void forallProcQ(pcb_t *head, void (*fun)(pcb_t *pcb, void *), void *arg){
+
+	if (head != NULL){
+		fun(head,arg);
+		forallProcQ(head->p_next,fun,arg);
+	}
+
+}
