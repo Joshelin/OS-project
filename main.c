@@ -191,85 +191,84 @@ int main() {
 	addokbuf("Test insertProcQ(), removeProcQ(), headProcQ(), forallProcQ(), outProcQ(): OK\n");
 	addokbuf("Test process queues module: OK\n");
 
-/*	addokbuf("Testing process trees...\n");
+	addokbuf("Testing process trees...\n");
 
 	/*check that it has no child*/
-/*	q = removeChild(procp[2]);
+	q = (pcb_t*)removeChild(procp[2]);	
 	if (q!=NULL )
 		adderrbuf("ERROR: emptyChild: unexpected FALSE\n");
 	/*if the test is passed, then the node has no child at all*/
 
 	/* make procp[1],procp[2],procp[3], procp[7] children of procp[0] */
-/*	addokbuf("Inserting...\n");
+	addokbuf("Inserting...\n");
 	insertChild(procp[0], procp[1]);
 	insertChild(procp[0], procp[2]);
 	insertChild(procp[0], procp[3]);
 	insertChild(procp[0], procp[7]);
 	addokbuf("Inserted 4 children of pcb0\n");
-
 	/* make procp[8],procp[9] children of procp[7] */
-/*	insertChild(procp[7], procp[8]);
+	insertChild(procp[7], procp[8]);
 	insertChild(procp[7], procp[9]);
 	addokbuf("Inserted 2 children of pcb7\n");
 
 	/*checking if node 7 has a child. if it doesn't have, ERRRO*/
-/*	q=removeChild(procp[7]);
+	q=(pcb_t*)removeChild(procp[7]);
 	addokbuf("Removed the first child of 7\n");
 	if(q==NULL)
 		adderrbuf("ERROR: emptyChild: node 7 has no child!\n");
 	if(q!=procp[8])
 		adderrbuf("ERROR: removeChild(procp[0] failed\n");
 	/*otherwise, we will re-insert*/
-/*	insertChild(procp[7], q);
+	insertChild(procp[7], q);
 
 	addokbuf("Re-inserted son in 7, now removing in 0\n");
 
 	/*check the same with node 0*/
-/*	q=removeChild(procp[0]);
+	q=(pcb_t*)removeChild(procp[0]);
 	addokbuf("Removed the first child of 0\n");
 	if(q==NULL)
 		adderrbuf("ERROR: emptyChild: node 0 has no child!\n");
 	if(q!=procp[1])
 		adderrbuf("ERROR:  removeChild(procp[0] failed\n");
 	/*otherwise, we will re-insert*/
-/*	insertChild(procp[0], q);
+	insertChild(procp[0], q);
 
 	addokbuf("Check outchild function\n");
 
 	/* Check outChild */
-/*	q = outChild(procp[1]);
+	q = (pcb_t*)outChild(procp[1]);
 	addokbuf("Outchild executed on 1\n");
 	if (q == NULL || q != procp[1])
 		adderrbuf("ERROR: outChild(procp[1]) failed\n");
-	q = outChild(procp[8]);
+	q = (pcb_t*)outChild(procp[8]);
 	addokbuf("Outchild executed on 8\n");
 	if (q == NULL || q != procp[8])
 		adderrbuf("ERROR: outChild(procp[8]) failed\n");
 
 	/* Check removeChild */
-/*	q = removeChild(procp[0]);
+	q = (pcb_t*)removeChild(procp[0]);
 	addokbuf("Removechild executed on 0\n");
 	if (q==procp[1])
 		adderrbuf("q==pp1");
 	if (q == NULL || q != procp[2])
 		adderrbuf("ERROR: removeChild(procp[0])  1 failed\n");
 
-	q = removeChild(procp[7]);
+	q = (pcb_t*)removeChild(procp[7]);
 	addokbuf("Removechild executed on 7\n");
 	if (q == NULL || q != procp[9])
 		adderrbuf("ERROR: removeChild(procp[7])  2 failed\n");
 
-	q = removeChild(procp[0]);
+	q = (pcb_t*)removeChild(procp[0]);
 	addokbuf("Removechild executed on 0\n");
 	if (q == NULL || q != procp[3])
 		adderrbuf("ERROR: removeChild(procp[0]) 2 failed\n");
 
-	q = removeChild(procp[0]);
+	q = (pcb_t*)removeChild(procp[0]);
 	addokbuf("Removechild executed on 0\n");
 	if (q == NULL || q != procp[7])
 		adderrbuf("ERROR: removeChild(procp[0]) 3 failed\n");
 
-	q=removeChild(procp[0]);
+	q=(pcb_t*)removeChild(procp[0]);
 	addokbuf("Removechild executed on 0\n");
 	if ( q!=NULL )
 		adderrbuf("ERROR: removeChild(procp[0]): it had already a child! it shouldn't! ");
