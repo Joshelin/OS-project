@@ -44,6 +44,7 @@ pcb_t* removeProcQ(pcb_t **head){
 		*head = (*head)->p_next ;
 		temp->p_next = NULL ;
 		temp->priority = 0 ;
+		return temp ;
 	}
 }
 
