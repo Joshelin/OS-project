@@ -7,7 +7,7 @@ void insertProcQ(pcb_t **head, pcb_t *p);
 
 /* Restituisce l’elemento di testa della coda dei processi da head, SENZA RIMUOVERLO.
 Ritorna NULL se la coda non ha elementi.*/
-pcb_t headProcQ(pcb_t *head);
+pcb_t* headProcQ(pcb_t *head);
 
 /* Rimuove il primo elemento dalla coda dei processi puntata da head.
 Ritorna NULL se la coda è  vuota.
@@ -20,4 +20,4 @@ Se p non è presente nella coda, restituisce NULL.
 pcb_t* outProcQ(pcb_t **head, pcb_t *p);
 
 // Richiama la funzione fun per ogni elemento della lista puntata da head.
-void forallProcQ(pcb_t *head, void *fun(pcb_t *pcb, void *), void *arg);
+void forallProcQ(pcb_t *head, void (*fun)(pcb_t *pcb, void *), void *arg);

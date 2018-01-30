@@ -6,12 +6,9 @@
 ASSUNZIONE:  non  ci sono più  di  MAXPROC processi concorrenti  in YAEOS.*/
 #ifndef PCB_H
 #define PCB_H
-#define NULL 0
-#define TRUE 1 
-#define FALSE 0
-#define bool int 
 
-typedef int* state_t ;
+#include "uARMtypes.h"
+#define bool int 
 
 typedef struct pcb_t{
 	struct pcb_t *p_next;
