@@ -1,14 +1,14 @@
 #include "../PCB.h"
 
+
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H 
 
-#define MAXSEMD 100
-#define ASHDSIZE 20
+
 /* Ad  ogni  semaforo  è  associato  un  descrittore (SEMD)  con  la  struttura  seguente.
 s_key è l'indirizzo della variabile intera che contiene il valore del semaforo.
 L'indirizzo di s_key serve come identificatore del semaforo.*/
-typedef struct {
+typedef struct semd_t {
 	struct semd_t *s_next;
 	int *s_key;
 	struct pcb_t *s_procQ;
@@ -27,6 +27,12 @@ semd_t *semdFree_h;
 semd_t *semdhash[ASHDSIZE];
 
 /* Funzioni */
+
+//alloca semaforo nella lista dei semafori liberi
+semd_t* allocSemaphore();
+
+//cerca chiave nelle liste di trabocco se c'è già
+bool matchKey(int* key);
 
 /* Viene inserito il PCB puntato da  p nella coda dei processi  bloccati  associata  al semaforo con chiave key.
 Se il semaforo corrispondente non è  presente nella ASHT, alloca un nuovo SEMD dalla lista di quelli liberi e lo inserisce nella  ASHT, settando i campi in maniera opportuna.
@@ -49,10 +55,10 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg);
 
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
 (La hash table deve essere aggiornata in modo coerente).*/
-void? outChildBlocked(pcb_t *p);
+void outChildBlocked(pcb_t *p);
 
 /* Inizializza la lista dei semdFree in modo da contenere tutti gli elementi della semdTable.
 Questo metodo viene invocato una volta sola durante l’inizializzazione della struttura dati.*/
 void initASL();
 
-#endif
+	#endif

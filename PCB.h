@@ -8,6 +8,7 @@ ASSUNZIONE:  non  ci sono più  di  MAXPROC processi concorrenti  in YAEOS.
 #define PCB_H
 
 #include "uARMtypes.h"
+#include "const.h"
 #define bool int 
 
 typedef struct pcb_t{
@@ -15,7 +16,7 @@ typedef struct pcb_t{
 	struct pcb_t *p_parent;
 	struct pcb_t *p_first_child;
 	struct pcb_t *p_sib;
-	state_t p_s; // NON ESISTE state_t DAVOLI DAI CAZZO.
+	state_t p_s; 
 	int priority;
 	int *p_semKey;
 } pcb_t;

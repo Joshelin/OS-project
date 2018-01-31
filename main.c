@@ -292,11 +292,11 @@ int main() {
 	addokbuf("Now starting with test of semaphores\n");
 
 	/* check ASL */
-/*	initASL();
+	initASL();
 	addokbuf("Initializing active semaphore list\n");
 
 	/* check removeBlocked and insertBlocked */
-/*	addokbuf("Test insertBlocked(): test #1 started\n");
+	addokbuf("Test insertBlocked(): test #1 started\n");
 	for (i = 10; i < MAXSEMD; i++) {
 		procp[i] = allocPcb();
 		if (insertBlocked(&sem[i], procp[i]))
@@ -321,9 +321,9 @@ int main() {
 	/*****************************************************************************************/
 	/*counting the processes inside a semaphore*/
 	/*first i reset to 0*/
-/*	my_counter_process = 0;
+	my_counter_process = 0;
 	/*then i count*/
-/*	forallBlocked(&sem[1], increment_counter, &my_counter_process);
+	forallBlocked(&sem[1], increment_counter, &my_counter_process);
 	if(my_counter_process != 3)
 		adderrbuf("ERROR forallBlocked, increment_counter. expected 3\n");
 	else
@@ -331,16 +331,16 @@ int main() {
 
 	/*counting the processes inside a semaphore*/
 	/*first i reset to 0*/
-/*	my_counter_process = 0;
+	my_counter_process = 0;
 	/*then i count*/
-/*	forallBlocked(&sem[2], increment_counter, &my_counter_process);
+	forallBlocked(&sem[2], increment_counter, &my_counter_process);
 	if(my_counter_process != 1)
 		adderrbuf("ERROR forallBlocked, increment_counter. expected 1\n");
 	else
 		addokbuf("I have found 1 elements in sem 2; correct\n");
 
 	/*adjust*/
-/*	p = removeBlocked(&sem[1]);
+	p = removeBlocked(&sem[1]);
 	if (insertBlocked(&sem[8],p))
 		adderrbuf("ERROR: removeBlocked(): fails to return to free list\n");
 	p = removeBlocked(&sem[1]);
