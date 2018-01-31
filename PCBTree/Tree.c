@@ -4,18 +4,19 @@ pcb_t *temp ;
 bool init = FALSE ;
 
 void insertChild(pcb_t *parent, pcb_t *p){
-	if (parent->p_first_child == NULL){
+
+	if (parent->p_first_child == NULL){ //Parent non ha figli.
 		parent->p_first_child = p ;
 		p->p_parent = parent ;
 		p->p_sib = NULL ;
 	}
 	else {
 		
-		if (!init){
+		if (!init){ // Inizializzazione temp
 			temp = parent->p_first_child ;
 			init = TRUE ;
 		}
-		if (temp->p_sib == NULL){
+		if (temp->p_sib == NULL){ //"Iterazione ricorsiva" per i fratelli fino alla coda.
 			temp->p_sib = p ;
 			p->p_parent = parent ;
 			p->p_sib = NULL ;
@@ -45,7 +46,7 @@ pcb_t* outChild(pcb_t* p){
 	if (p->p_parent == NULL){
 		return NULL ;
 	}
-	if ((p->p_parent->p_first_child == p) && !init){
+	if ((p->p_parent->p_first_child == p) && !init){ // p è il first_child && !init per eseguire solo 1 volta.
 		p->p_parent->p_first_child = p->p_sib ;
 		p->p_parent = NULL ;
 		p->p_sib = NULL ;
@@ -55,7 +56,7 @@ pcb_t* outChild(pcb_t* p){
 		temp = p->p_parent->p_first_child ;
 		init = TRUE ;
 	}
-	if (temp->p_sib == p){
+	if (temp->p_sib == p){ // "Iterazione ricorsiva" fino al match.
 		temp->p_sib = p->p_sib ;
 		p->p_parent = NULL ;
 		p->p_sib = NULL ;
