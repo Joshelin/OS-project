@@ -2,6 +2,7 @@
 
 int i ;
 semd_t *temp ;
+extern bool flag = FALSE;
 
 semd_t* allocSemaphore(){
 	if (semdFree_h == NULL)
@@ -22,12 +23,31 @@ semd_t* allocSemaphore(){
 	}
 
 	bool matchKey(int* key){
-		
+		if (!flag) {  // inizializzazione.
+			if (semdhash[hash(key)]->s_next == NULL){ // Se semdhash[hash(key)] non ha semafori, ovviamente non è già bloccato.
+				return FALSE;
+			}
+			temp = semdhash[hash(key)]->s_next;
+			flag = TRUE;
+		}
+		if (temp->s_key == key){ // se trovo un conflitto.
+			flag = FALSE
+			return TRUE;
+		}
+		else if(temp->s_next == NULL) { // sono arrivato alla coda senza conflitti.
+			flag = FALSE;
+			return FALSE;
+		}
+		else{
+			temp = temp->s_next;
+			return matchKey(key);
+		}
 	}
 
 	int insertBlocked(int *key, pcb_t *p){
-	if(/*s_key presente*/){
-		//implementare controllo se già esiste e hash function 
+	if(matchKey(key)){
+		// Se entriamo qui, il semaforo è già bloccato, inserire valore di ritorno che vuole Davoli. Nelle specifiche non lo dice >:(.
+		// return 0? TUTTI GLI ALTRI CASI non vuol dire un cazzo.
 	}
 	else{
 		temp = allocSemaphore() ;
