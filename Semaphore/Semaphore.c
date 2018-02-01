@@ -2,12 +2,12 @@
 
 int i ;
 semd_t *temp ;
-extern bool flag = FALSE;
+bool flag = FALSE;
 
 semd_t* allocSemaphore(){
 	if (semdFree_h == NULL)
 		return NULL ;
-	else if (semdFree_h->p_next == NULL) { // Ultimo pcb libero, la lista pcbfree diventa vuota.
+	else if (semdFree_h->s_next == NULL) { // Ultimo pcb libero, la lista pcbfree diventa vuota.
 		temp = semdFree_h;
 		semdFree_h = NULL;
 		return temp;
@@ -19,7 +19,11 @@ semd_t* allocSemaphore(){
 	}
 
 	int hash(int* key){
-
+		const int a = 11;
+		const int b = 1;
+		long longKey = (long)key;
+		longKey = ((a*longKey)+b)%MAXSEMD;
+		return (int)longKey%ASHDSIZE;
 	}
 
 	bool matchKey(int* key){
@@ -31,7 +35,7 @@ semd_t* allocSemaphore(){
 			flag = TRUE;
 		}
 		if (temp->s_key == key){ // se trovo un conflitto.
-			flag = FALSE
+			flag = FALSE;
 			return TRUE;
 		}
 		else if(temp->s_next == NULL) { // sono arrivato alla coda senza conflitti.
@@ -70,10 +74,8 @@ semd_t* allocSemaphore(){
 			p->p_semKey = key ;
 			return 0 ;
 		}
-
-
-
 	}
+}
 
 /* Restituisce il puntatore al pcb del primo processo bloccato sul semaforo, senza deaccordarlo.
 Se il semaforo non esiste restituisce NULL.*/
