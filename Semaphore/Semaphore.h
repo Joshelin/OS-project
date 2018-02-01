@@ -28,11 +28,17 @@ semd_t *semdhash[ASHDSIZE];
 
 /* Funzioni */
 
-//alloca semaforo nella lista dei semafori liberi
+//alloca semaforo dalla lista dei semafori liberi
 semd_t* allocSemaphore();
 
+//libera il semaforo inserendolo nella lista dei semafori liberi
+void freeSemaphore(int *key);
+
 //cerca chiave nelle liste di trabocco se c'è già
-bool matchKey(int* key);
+semd_t* matchKey(int* key);
+
+//inserisce il pcb nella coda s_procQ del semaforo.
+void enqueuePcb(semd_t *semaforo, pcb_t *p);
 
 /* Viene inserito il PCB puntato da  p nella coda dei processi  bloccati  associata  al semaforo con chiave key.
 Se il semaforo corrispondente non è  presente nella ASHT, alloca un nuovo SEMD dalla lista di quelli liberi e lo inserisce nella  ASHT, settando i campi in maniera opportuna.
