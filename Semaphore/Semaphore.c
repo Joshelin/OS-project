@@ -8,22 +8,45 @@ bool flag = FALSE;
 semd_t* allocSemaphore(){
 	if (semdFree_h == NULL)
 		return NULL ;
-	else if (semdFree_h->s_next == NULL) { // Ultimo pcb libero, la lista pcbfree diventa vuota.
+	else if (semdFree_h->s_next == NULL) { // Ultimo semaforo libero, la lista semdFree diventa vuota.
 		semdTemp = semdFree_h;
 		semdFree_h = NULL;
 		return semdTemp;
-		}else{ // rimuovo la testa dalla lista dei pcbfree.
-			semdTemp = semdFree_h;
-			semdFree_h = semdFree_h->s_next ;
-			return semdTemp;
-		}
 	}
-
+	else{ // rimuovo la testa dalla lista dei semdFree.
+		semdTemp = semdFree_h;
+		semdFree_h = semdFree_h->s_next ;
+		return semdTemp;
+	}
+}
+// NB: freeSemaphore viene invocata SOLO quando è sicuro che il semaforo può esser rimosso.
 void freeSemaphore(int *key){
-
+	if(!flag){
+		if(semdhash[hash(key)]->s_next->s_key == key){ // se il semaforo da liberare è il primo della lista in 'semdhash[hash(key)]' lo aggiungo in testa a semdFree e lo rimuovo da ASHT
+			semdTemp = semdhash[hash(key)]->s_next;
+			semdhash[hash(key)]->s_next = semdhash[hash(key)]->s_next->s_next;
+			semdTemp->s_next = semdFree_h;
+			semdFree_h = semdTemp;
+			return;
+		}
+		semdTemp = semdhash[hash(key)]->s_next;
+		flag = TRUE;
+	}
+// temp è un altro puntatore (locale), necessario per inserire il semaforo in semdFree. semdTemp è usato per scorrere la lista in semdhash[hash(key)];
+	if(semdTemp->s_next->s_key == key){ // se ho trovato il semaforo da liberare, lo aggiungo in testa a semdFree e lo rimuovo da ASHT.
+		semd_t *temp = semdTemp->s_next; 
+		semdTemp->s_next = semdTemp->s_next->s_next;
+		temp->s_next = semdFree_h;
+		semdFree_h = temp;
+		flag = FALSE;
+	}
+	else{
+		semdTemp = semdTemp->s_next;
+		freeSemaphore(key);
+	}
 }
 
-int hash(int* key){
+int hash(int* key){ // Calcolo a caso che ritorni un valore tra 0 e ASHDSIZE.
 	const int a = 11;
 	const int b = 1;
 	long longKey = (long)key;
@@ -125,7 +148,20 @@ pcb_t* removeBlocked(int *key){
 }
 
 // Richiama la funzione fun per ogni processo bloccato sul semaforo identificato da key.
-void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg);
+void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
+	if(!flag){
+		semdTemp = matchKey(key);
+		if (semdTemp == NULL)
+			return;
+		pcbTemp = semdTemp->s_procQ;
+		flag = TRUE;
+	}
+	fun(pcbTemp,arg);
+	if(pcbTemp->p_next != NULL){
+		pcbTemp = pcbTemp->p_next;
+		forallBlocked(key,fun,arg);
+	}
+}
 
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
 (La hash table deve essere aggiornata in modo coerente).*/
