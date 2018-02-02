@@ -161,6 +161,7 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
 		pcbTemp = pcbTemp->p_next;
 		forallBlocked(key,fun,arg);
 	}
+	flag = FALSE;
 }
 
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
