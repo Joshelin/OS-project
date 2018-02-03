@@ -35,8 +35,10 @@
 #include "uARMtypes.h"
 #include "libuarm.h"
 #include "./PCBAlloc/Alloc.h"
-#include "const.h"
 #include "./PCBQueue/Queue.h"
+#include "./PCBTree/Tree.h"
+#include "./Semaphore/Semaphore.h"
+
 //#include "pcb.h"
 //#include "asl.h"
 
@@ -212,7 +214,7 @@ int main() {
 	addokbuf("Inserted 2 children of pcb7\n");
 
 	/*checking if node 7 has a child. if it doesn't have, ERRRO*/
-	q=(pcb_t*)removeChild(procp[7]);
+	q= removeChild(procp[7]);
 	addokbuf("Removed the first child of 7\n");
 	if(q==NULL)
 		adderrbuf("ERROR: emptyChild: node 7 has no child!\n");
@@ -224,7 +226,7 @@ int main() {
 	addokbuf("Re-inserted son in 7, now removing in 0\n");
 
 	/*check the same with node 0*/
-	q=(pcb_t*)removeChild(procp[0]);
+	q= removeChild(procp[0]);
 	addokbuf("Removed the first child of 0\n");
 	if(q==NULL)
 		adderrbuf("ERROR: emptyChild: node 0 has no child!\n");
@@ -236,7 +238,7 @@ int main() {
 	addokbuf("Check outchild function\n");
 
 	/* Check outChild */
-	q = (pcb_t*)outChild(procp[1]);
+	q = outChild(procp[1]);
 	addokbuf("Outchild executed on 1\n");
 	if (q == NULL || q != procp[1])
 		adderrbuf("ERROR: outChild(procp[1]) failed\n");
@@ -246,29 +248,29 @@ int main() {
 		adderrbuf("ERROR: outChild(procp[8]) failed\n");
 
 	/* Check removeChild */
-	q = (pcb_t*)removeChild(procp[0]);
+	q = removeChild(procp[0]);
 	addokbuf("Removechild executed on 0\n");
 	if (q==procp[1])
 		adderrbuf("q==pp1");
 	if (q == NULL || q != procp[2])
 		adderrbuf("ERROR: removeChild(procp[0])  1 failed\n");
 
-	q = (pcb_t*)removeChild(procp[7]);
+	q = removeChild(procp[7]);
 	addokbuf("Removechild executed on 7\n");
 	if (q == NULL || q != procp[9])
 		adderrbuf("ERROR: removeChild(procp[7])  2 failed\n");
 
-	q = (pcb_t*)removeChild(procp[0]);
+	q = removeChild(procp[0]);
 	addokbuf("Removechild executed on 0\n");
 	if (q == NULL || q != procp[3])
 		adderrbuf("ERROR: removeChild(procp[0]) 2 failed\n");
 
-	q = (pcb_t*)removeChild(procp[0]);
+	q = removeChild(procp[0]);
 	addokbuf("Removechild executed on 0\n");
 	if (q == NULL || q != procp[7])
 		adderrbuf("ERROR: removeChild(procp[0]) 3 failed\n");
 
-	q=(pcb_t*)removeChild(procp[0]);
+	q= removeChild(procp[0]);
 	addokbuf("Removechild executed on 0\n");
 	if ( q!=NULL )
 		adderrbuf("ERROR: removeChild(procp[0]): it had already a child! it shouldn't! ");
@@ -297,7 +299,7 @@ int main() {
 
 	/* check removeBlocked and insertBlocked */
 	addokbuf("Test insertBlocked(): test #1 started\n");
-	for (i = 10; i < MAXSEMD; i++) {
+	for (i = 10; i < MAXPROC; i++) {
 		procp[i] = allocPcb();
 		if (insertBlocked(&sem[i], procp[i]))
 			adderrbuf("ERROR: insertBlocked() test#1: unexpected TRUE\n");
@@ -350,9 +352,9 @@ int main() {
 
 	/*****************************************************************************************/
 
-/*	addokbuf("Check if the semaphores are returned to the free list\n");
+	addokbuf("Check if the semaphores are returned to the free list\n");
 	/* check if semaphore descriptors are returned to the free list */
-/*	p = removeBlocked(&sem[11]);
+	p = removeBlocked(&sem[11]);
 	if (insertBlocked(&sem[11],p))
 		adderrbuf("ERROR: removeBlocked(): fails to return to free list\n");
 
@@ -365,7 +367,7 @@ int main() {
 		if (q == NULL)
 			adderrbuf("ERROR: removeBlocked(): wouldn't remove\n");
 		if (q != procp[i]) /* different from what expected!*/
-/*			adderrbuf("ERROR: removeBlocked(): removed wrong element\n");
+			adderrbuf("ERROR: removeBlocked(): removed wrong element\n");
 	}
 
 	addokbuf("Test blocked done\n");
@@ -374,11 +376,11 @@ int main() {
 		adderrbuf("ERROR: removeBlocked(): removed nonexistent blocked proc\n");
 
 	addokbuf("Test insertBlocked() and removeBlocked() ok\n");
-
+/*
 
 #if 0
 	/* Creating a 2-layer tree */
-/*	insertChild(procp[0], procp[1]);
+	insertChild(procp[0], procp[1]);
 	insertChild(procp[0], procp[2]);
 	insertChild(procp[2], procp[3]);
 	insertChild(procp[3], procp[4]);

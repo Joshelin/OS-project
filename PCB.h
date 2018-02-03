@@ -8,8 +8,10 @@ ASSUNZIONE:  non  ci sono più  di  MAXPROC processi concorrenti  in YAEOS.
 #define PCB_H
 
 #include "uARMtypes.h"
-#include "const.h"
 #define bool int 
+#define MAXPROC 20
+#define MAXSEMD MAXPROC
+#define ASHDSIZE 8
 
 typedef struct pcb_t{
 	struct pcb_t *p_next;
