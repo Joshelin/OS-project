@@ -22,16 +22,16 @@ semd_t* allocSemaphore(){
 // NB: freeSemaphore viene invocata SOLO quando è sicuro che il semaforo può esser rimosso.
 void freeSemaphore(int *key){
 	if(!condition){
-		if(semdhash[hash(key)]->s_next->s_key == key){ // se il semaforo da liberare è il primo della lista in 'semdhash[hash(key)]' lo aggiungo in testa a semdFree e lo rimuovo da ASHT
-			semdTemp = semdhash[hash(key)]->s_next;
-		semdhash[hash(key)]->s_next = semdhash[hash(key)]->s_next->s_next;
-		semdTemp->s_next = semdFree_h;
-		semdFree_h = semdTemp;
-		return;
+		if(semdhash[hash(key)]->s_key == key){ // se il semaforo da liberare è il primo della lista in 'semdhash[hash(key)]' lo aggiungo in testa a semdFree e lo rimuovo da ASHT
+			semdTemp = semdhash[hash(key)];
+			semdhash[hash(key)] = semdhash[hash(key)]->s_next;
+			semdTemp->s_next = semdFree_h;
+			semdFree_h = semdTemp;
+			return;
+		}
+		semdTemp = semdhash[hash(key)];
+		condition = TRUE;
 	}
-	semdTemp = semdhash[hash(key)]->s_next;
-	condition = TRUE;
-}
 // temp è un altro puntatore (locale), necessario per inserire il semaforo in semdFree. semdTemp è usato per scorrere la lista in semdhash[hash(key)];
 	if(semdTemp->s_next->s_key == key){ // se ho trovato il semaforo da liberare, lo aggiungo in testa a semdFree e lo rimuovo da ASHT.
 		semd_t *temp = semdTemp->s_next; 
@@ -56,7 +56,7 @@ int hash(int* key){ // Calcolo a caso che ritorni un valore tra 0 e ASHDSIZE.
 
 semd_t* matchKey(int* key){
         
-        if (!condition) {  // inizializzazione.
+    if (!condition) {  // inizializzazione.
 		if (semdhash[hash(key)] == NULL){ // Se semdhash[hash(key)] non ha semafori, ovviamente non è già bloccato.
 			return NULL;
 		}
@@ -85,7 +85,7 @@ void enqueuePcb(semd_t *semaforo, pcb_t *p){
 	if (pcbTemp->p_next == NULL){ //trovato ultimo pcb in coda su questo semaforo.
 		pcbTemp->p_next = p;
 		p->p_semKey = semaforo->s_key;
-                condition = FALSE ;
+        condition = FALSE ;
 	}
 	else{
 		pcbTemp = pcbTemp->p_next;
@@ -108,6 +108,7 @@ int insertBlocked(int *key, pcb_t *p){
 			semdhash[hash(key)]->s_next = NULL ;
 			semdhash[hash(key)]->s_key = key ;
 			semdhash[hash(key)]->s_procQ = p ;
+			p->p_next = NULL;
 			p->p_semKey = key ;
 			return 0 ;
 		}
@@ -116,6 +117,7 @@ int insertBlocked(int *key, pcb_t *p){
 			semdhash[hash(key)] = semdTemp ;
 			semdhash[hash(key)]->s_key = key ;
 			semdhash[hash(key)]->s_procQ = p ;
+			p->p_next = NULL;
 			p->p_semKey = key ;
 			return 0 ;
 		}
@@ -139,14 +141,15 @@ Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descr
 pcb_t* removeBlocked(int *key){
 	if(semdTemp = matchKey(key)){ //trovo il semaforo con chiave 'key', se esiste, ritorno il primo pcb in coda, se il pcb ritornato è l'ultimo, libero il semaforo aggiungedolo a 'semdFree'.
 		pcbTemp = semdTemp->s_procQ;
-	semdTemp->s_procQ = pcbTemp->p_next;
-	if(semdTemp->s_procQ == NULL){
-		freeSemaphore(key);
+		semdTemp->s_procQ = pcbTemp->p_next;
+		if(semdTemp->s_procQ == NULL){
+			freeSemaphore(key);
+		}
+		return pcbTemp;
 	}
-	return pcbTemp;
-}else{
-	return NULL;
-}
+	else{
+		return NULL;
+	}
 }
 
 // Richiama la funzione fun per ogni processo bloccato sul semaforo identificato da key.
