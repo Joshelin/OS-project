@@ -327,7 +327,7 @@ int main() {
 	/*then i count*/
 	forallBlocked(&sem[1], increment_counter, &my_counter_process);
 	if(my_counter_process != 3)
-		adderrbuf("ERROR forallBlocked, increment_counter. expected 3\n");
+		adderrbuf("ERROR forallBlocked, increment_counter. expected 3\n"); // errore uarm si ferma qua
 	else
 		addokbuf("I have found 3 elements in sem 1; correct\n");
 

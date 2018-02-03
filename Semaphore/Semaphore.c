@@ -85,6 +85,7 @@ void enqueuePcb(semd_t *semaforo, pcb_t *p){
 	if (pcbTemp->p_next == NULL){ //trovato ultimo pcb in coda su questo semaforo.
 		pcbTemp->p_next = p;
 		p->p_semKey = semaforo->s_key;
+                condition = FALSE ;
 	}
 	else{
 		pcbTemp = pcbTemp->p_next;
