@@ -175,28 +175,32 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
 void outChildBlocked(pcb_t *p){
 
 	if (!condition){
-		semdTemp = semdhash[hash(p->p_semKey)] ; //poiché ho come parametro p, invece che key, uso semKey di pcb_t
-		condition = TRUE ;
-		if (semdTemp->s_procQ == p){ //controllo caso in cui pcb sia bloccato dal primo semaforo
-			condition = FALSE ;
-			semdhash[hash(p->p_semKey)] = semdTemp->s_next ;
+		semdTemp = matchKey(p->p_semKey); //poiché ho come parametro p, invece che key, uso semKey di pcb_t
+		if(semdTemp == NULL)
+			return;
+		pcbTemp = semdTemp->s_procQ;
+		if (pcbTemp == p){
+			semdTemp->s_procQ = pcbTemp->p_next;
+			pcbTemp->p_next = NULL;
+			pcbTemp->p_semKey = NULL;
+			if(semdTemp->s_procQ == NULL)
+				freeSemaphore(semdTemp->s_key);
+			return;
 		}
+		condition = TRUE ;
+	}
 
-	}
-	if (semdTemp->s_next == NULL){ //controllo caso in cui ho attraversato tutta la lista e non ho trovato il pcb
+	if (pcbTemp->p_next == p){ 
+		pcb_t *temp = pcbTemp->p_next;
+		pcbTemp->p_next = pcbTemp->p_next->p_next;
+		temp->p_next = NULL;
+		temp->p_semKey = NULL;
 		condition = FALSE ;
-		return ;
 	}
-	if (semdTemp->s_next->s_procQ == p){ //ho trovato il pcb
-		condition = FALSE ;
-		semdTemp->s_next = semdTemp->s_next->s_next ;
-	}
-	else {
-		semdTemp = semdTemp->s_next ;
+	else{
+		pcbTemp = pcbTemp->p_next ;
 		outChildBlocked(p);
 	}
-
-	
 }
 
 
