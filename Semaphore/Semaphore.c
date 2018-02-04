@@ -4,7 +4,9 @@ int j = 0 ;
 semd_t *semdTemp ;
 pcb_t *pcbTemp;
 pcb_t *pcbChild;
+pcb_t *pcbSib;
 bool condition = FALSE;
+bool init = FALSE;
 
 semd_t* allocSemaphore(){
 	if (semdFree_h == NULL)
@@ -171,27 +173,23 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
 	condition = FALSE;
 }
 
-/* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
-(La hash table deve essere aggiornata in modo coerente).*/
-void outChildBlocked(pcb_t *p){
+void outPcbBlocked(pcb_t *p){
 	if (!condition){
-		pcbChild = removeChild(p);
-		semdTemp = matchKey(pcbChild->p_semKey); //poiché ho come parametro p, invece che key, uso semKey di pcb_t
+		semdTemp = matchKey(p->p_semKey); //poiché ho come parametro p, invece che key, uso semKey di pcb_t per trovare il semaforo.
 		if(semdTemp == NULL)
 			return;
 		pcbTemp = semdTemp->s_procQ;
-		if (pcbTemp == pcbChild){
+		if (pcbTemp == p){ // Se il p che sto cercando è il primo in coda, lo tolgo subito.
 			semdTemp->s_procQ = pcbTemp->p_next;
 			pcbTemp->p_next = NULL;
 			pcbTemp->p_semKey = NULL;
-			if(semdTemp->s_procQ == NULL)
+			if(semdTemp->s_procQ == NULL) // se il p che ho tolto era l'ultimo del semaforo, libero il semaforo.
 				freeSemaphore(semdTemp->s_key);
 			return;
-			}
+		}
 		condition = TRUE ;
 	}
-
-	if (pcbTemp->p_next == pcbChild){ 
+	if (pcbTemp->p_next == p){ // Scorrendo ho trovato il pcb, lo tolgo mantenendo la coda inalterata.
 		pcb_t *temp = pcbTemp->p_next;
 		pcbTemp->p_next = pcbTemp->p_next->p_next;
 		temp->p_next = NULL;
@@ -200,10 +198,36 @@ void outChildBlocked(pcb_t *p){
 	}
 	else{
 		pcbTemp = pcbTemp->p_next ;
-		outChildBlocked(p);
+		outPcbBlocked(p);
 	}
 }
 
+/* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
+(La hash table deve essere aggiornata in modo coerente).*/
+void outChildBlocked(pcb_t *p){
+	if(!init){
+		pcbParent = p; // Salvo chi è il parent per poi poter fare outChild nel caso sia figlio di qualcuno.
+		init = TRUE;
+	}
+	if(p->p_first_child != NULL){ // Scendo fino all'ultimo figlio, Es. Se parto dal nonno, comincio a togliere dai semafori e dall'albero i nipoti, poi i fratelli dei nipoti, poi il genitore e così via.
+		outChildBlocked(p->p_first_child);
+	}
+	if(p == pcbParent){ // Entro solo se ho già tolto tutti e rimane solo il parent. NB: Il parent originale potrebbe essere figlio di qualcuno o avere dei fratelli.
+		outChild(pcbParent);
+		outPcbBlocked(pcbParent);
+		init = FALSE;
+	}
+	else{
+		pcbSib = p->p_sib; // Salvo il fratello del p che sto togliendo perchè removeChild, giustamente, toglie i puntatori ai fratelli.
+		pcbChild = removeChild(p->p_parent);
+		if(pcbChild != NULL){ 
+			outPcbBlocked(pcbChild); 
+			if(p->p_sib!=NULL){
+				outChildBlocked(pcbSib); // Ripeto sul fratello che a questo punto è il first_child del parent attuale.
+			}
+		}
+	}
+}
 
 void initASL(){
 	if (j == 0){
