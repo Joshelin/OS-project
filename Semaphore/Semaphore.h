@@ -65,7 +65,10 @@ pcb_t* removeBlocked(int *key);
 // Richiama la funzione fun per ogni processo bloccato sul semaforo identificato da key.
 void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg);
 
-/* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato. <--- NEL MAIN VUOLE CHE VENGA RIMOSSO IL FIGLIO DI P. FREGANDOSENE DI EVENTUALI SIBLINGS. QUESTO E' PERICOLOSISSIMO!
+// Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato.
+void outPcbBlocked(pcb_t *p);
+
+/* Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato. <--- NEL MAIN VUOLE CHE VENGANO RIMOSSI TUTTI I FIGLI, NIPOTI, ETC... DI P.
 (La hash table deve essere aggiornata in modo coerente).*/
 void outChildBlocked(pcb_t *p);
 
