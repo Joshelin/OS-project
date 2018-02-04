@@ -3,6 +3,7 @@
 int j = 0 ;
 semd_t *semdTemp ;
 pcb_t *pcbTemp;
+pcb_t *pcbChild;
 bool condition = FALSE;
 
 semd_t* allocSemaphore(){
@@ -173,24 +174,24 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
 (La hash table deve essere aggiornata in modo coerente).*/
 void outChildBlocked(pcb_t *p){
-
 	if (!condition){
-		semdTemp = matchKey(p->p_semKey); //poiché ho come parametro p, invece che key, uso semKey di pcb_t
+		pcbChild = removeChild(p);
+		semdTemp = matchKey(pcbChild->p_semKey); //poiché ho come parametro p, invece che key, uso semKey di pcb_t
 		if(semdTemp == NULL)
 			return;
 		pcbTemp = semdTemp->s_procQ;
-		if (pcbTemp == p){
+		if (pcbTemp == pcbChild){
 			semdTemp->s_procQ = pcbTemp->p_next;
 			pcbTemp->p_next = NULL;
 			pcbTemp->p_semKey = NULL;
 			if(semdTemp->s_procQ == NULL)
 				freeSemaphore(semdTemp->s_key);
 			return;
-		}
+			}
 		condition = TRUE ;
 	}
 
-	if (pcbTemp->p_next == p){ 
+	if (pcbTemp->p_next == pcbChild){ 
 		pcb_t *temp = pcbTemp->p_next;
 		pcbTemp->p_next = pcbTemp->p_next->p_next;
 		temp->p_next = NULL;
