@@ -42,6 +42,7 @@ semd_t* matchKey(int* key);
 //inserisce il pcb nella coda s_procQ del semaforo.
 void enqueuePcb(semd_t *semaforo, pcb_t *p);
 
+
 //PUBLIC
 
 /* Viene inserito il PCB puntato da  p nella coda dei processi  bloccati  associata  al semaforo con chiave key.

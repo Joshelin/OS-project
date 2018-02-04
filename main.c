@@ -327,7 +327,7 @@ int main() {
 	/*then i count*/
 	forallBlocked(&sem[1], increment_counter, &my_counter_process);
 	if(my_counter_process != 3)
-		adderrbuf("ERROR forallBlocked, increment_counter. expected 3\n"); // errore uarm si ferma qua
+		adderrbuf("ERROR forallBlocked, increment_counter. expected 3\n"); 
 	else
 		addokbuf("I have found 3 elements in sem 1; correct\n");
 
@@ -376,9 +376,8 @@ int main() {
 		adderrbuf("ERROR: removeBlocked(): removed nonexistent blocked proc\n");
 
 	addokbuf("Test insertBlocked() and removeBlocked() ok\n");
-/*
 
-#if 0
+
 	/* Creating a 2-layer tree */
 	insertChild(procp[0], procp[1]);
 	insertChild(procp[0], procp[2]);
@@ -386,13 +385,13 @@ int main() {
 	insertChild(procp[3], procp[4]);
 
 	/* Testing outChildBlocked */
-/*	outChildBlocked(procp[2]);
+	outChildBlocked(procp[2]);
 	addokbuf("I called the function outChildBlocked on procp[2]\n");
 
 	/*i'm expecting that the child 2 has no children*/
-/*	if(removeBlocked(&sem[2])!= NULL)
+	if(removeBlocked(&sem[2])!= NULL)
 		adderrbuf("ERROR: removeBlocked(): nonNULL for a nonexistent queue (2)  ");
-	if(removeBlocked(&sem[3])!= NULL)
+	if(removeBlocked(&sem[3])!= NULL) //kernel panic, debugger nota che hashsemd[5] non è NULL e quindi rimuove qualcosa quando non dovrebbe
 		adderrbuf("ERROR: removeBlocked(): nonNULL for a nonexistent queue (3)  ");
 	if(removeBlocked(&sem[4])!= NULL)
 		adderrbuf("ERROR: removeBlocked(): nonNULL for a nonexistent queue (4)  ");
@@ -401,11 +400,11 @@ int main() {
 		adderrbuf("ERROR: removeBlocked(): nonNULL for a nonexistent queue (0)  ");
 	if(removeBlocked(&sem[1])== NULL)
 		adderrbuf("ERROR: removeBlocked(): nonNULL for a nonexistent queue (1)  ");
-#endif
+
 
 	addokbuf("ASL module OK\n");
 	addokbuf("1f u c4n r34d th1s 1t m34ns th4t y430s m19ht w0rk\n");
 	addokbuf("\n");
-*/
+
 	return 0;
 }

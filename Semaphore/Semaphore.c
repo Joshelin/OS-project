@@ -24,14 +24,14 @@ void freeSemaphore(int *key){
 	if(!condition){
 		if(semdhash[hash(key)]->s_key == key){ // se il semaforo da liberare è il primo della lista in 'semdhash[hash(key)]' lo aggiungo in testa a semdFree e lo rimuovo da ASHT
 			semdTemp = semdhash[hash(key)];
-			semdhash[hash(key)] = semdhash[hash(key)]->s_next;
-			semdTemp->s_next = semdFree_h;
-			semdFree_h = semdTemp;
-			return;
-		}
-		semdTemp = semdhash[hash(key)];
-		condition = TRUE;
+		semdhash[hash(key)] = semdhash[hash(key)]->s_next;
+		semdTemp->s_next = semdFree_h;
+		semdFree_h = semdTemp;
+		return;
 	}
+	semdTemp = semdhash[hash(key)];
+	condition = TRUE;
+}
 // temp è un altro puntatore (locale), necessario per inserire il semaforo in semdFree. semdTemp è usato per scorrere la lista in semdhash[hash(key)];
 	if(semdTemp->s_next->s_key == key){ // se ho trovato il semaforo da liberare, lo aggiungo in testa a semdFree e lo rimuovo da ASHT.
 		semd_t *temp = semdTemp->s_next; 
@@ -55,7 +55,7 @@ int hash(int* key){ // Calcolo a caso che ritorni un valore tra 0 e ASHDSIZE.
 }
 
 semd_t* matchKey(int* key){
-        
+
     if (!condition) {  // inizializzazione.
 		if (semdhash[hash(key)] == NULL){ // Se semdhash[hash(key)] non ha semafori, ovviamente non è già bloccato.
 			return NULL;
@@ -85,7 +85,7 @@ void enqueuePcb(semd_t *semaforo, pcb_t *p){
 	if (pcbTemp->p_next == NULL){ //trovato ultimo pcb in coda su questo semaforo.
 		pcbTemp->p_next = p;
 		p->p_semKey = semaforo->s_key;
-        condition = FALSE ;
+		condition = FALSE ;
 	}
 	else{
 		pcbTemp = pcbTemp->p_next;
@@ -93,16 +93,17 @@ void enqueuePcb(semd_t *semaforo, pcb_t *p){
 	}
 }
 
+
 int insertBlocked(int *key, pcb_t *p){
 	if((semdTemp = matchKey(key)) != NULL){ // se eiste già un semaforo con chiave 'key', aggiungo il pcb in coda a tale semaforo.
 		enqueuePcb(semdTemp, p);
-		return 0;
-	}
-	else{
+	return 0;
+}
+else{
 		semdTemp = allocSemaphore() ; // il semaforo con 'key' non esiste, procedo a crearlo e aggiungere il suo primo pcb.
 		if (semdTemp == NULL)
 			return -1 ;
-                
+
 		if (semdhash[hash(key)] == NULL){
 			semdhash[hash(key)] = semdTemp ;
 			semdhash[hash(key)]->s_next = NULL ;
@@ -127,7 +128,7 @@ int insertBlocked(int *key, pcb_t *p){
 /* Restituisce il puntatore al pcb del primo processo bloccato sul semaforo, senza deaccordarlo.
 Se il semaforo non esiste restituisce NULL.*/
 pcb_t *headBlocked(int *key){
-	if(semdTemp = matchKey(key)){
+	if((semdTemp = matchKey(key)) != NULL){
 		return semdTemp->s_procQ;
 	}else{
 		return NULL;
@@ -139,16 +140,16 @@ Se tale descrittore non esiste nella ASHT, restituisce NULL.
 Altrimenti, restituisce l’elemento  rimosso.
 Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore corrispondente dalla  ASHT e lo inserisce nella coda dei descrittori liberi (semdFree).*/
 pcb_t* removeBlocked(int *key){
-	if(semdTemp = matchKey(key)){ //trovo il semaforo con chiave 'key', se esiste, ritorno il primo pcb in coda, se il pcb ritornato è l'ultimo, libero il semaforo aggiungedolo a 'semdFree'.
+	if((semdTemp = matchKey(key)) != NULL){ //trovo il semaforo con chiave 'key', se esiste, ritorno il primo pcb in coda, se il pcb ritornato è l'ultimo, libero il semaforo aggiungedolo a 'semdFree'.
 		pcbTemp = semdTemp->s_procQ;
-		semdTemp->s_procQ = pcbTemp->p_next;
-		if(semdTemp->s_procQ == NULL){
-			freeSemaphore(key);
-		}
-		return pcbTemp;
+	semdTemp->s_procQ = pcbTemp->p_next;
+	if(semdTemp->s_procQ == NULL){
+		freeSemaphore(key);
 	}
+	return pcbTemp;
+}
 	else{
-		return NULL;
+	return NULL;
 	}
 }
 
@@ -171,7 +172,32 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
 
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
 (La hash table deve essere aggiornata in modo coerente).*/
-void outChildBlocked(pcb_t *p);
+void outChildBlocked(pcb_t *p){
+
+	if (!condition){
+		semdTemp = semdhash[hash(p->p_semKey)] ; //poiché ho come parametro p, invece che key, uso semKey di pcb_t
+		condition = TRUE ;
+		if (semdTemp->s_procQ == p){ //controllo caso in cui pcb sia bloccato dal primo semaforo
+			condition = FALSE ;
+			semdhash[hash(p->p_semKey)] = semdTemp->s_next ;
+		}
+
+	}
+	if (semdTemp->s_next == NULL){ //controllo caso in cui ho attraversato tutta la lista e non ho trovato il pcb
+		condition = FALSE ;
+		return ;
+	}
+	if (semdTemp->s_next->s_procQ == p){ //ho trovato il pcb
+		condition = FALSE ;
+		semdTemp->s_next = semdTemp->s_next->s_next ;
+	}
+	else {
+		semdTemp = semdTemp->s_next ;
+		outChildBlocked(p);
+	}
+
+	
+}
 
 
 void initASL(){
@@ -186,5 +212,6 @@ void initASL(){
 	}
 	if (j == MAXSEMD){
 		semdTemp->s_next = NULL;
+		j = 0 ;
 	}
 }
