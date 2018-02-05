@@ -32,12 +32,12 @@
  *
  */
 
-#include "uARMtypes.h"
-#include "libuarm.h"
-#include "./PCBAlloc/Alloc.h"
-#include "./PCBQueue/Queue.h"
-#include "./PCBTree/Tree.h"
-#include "./Semaphore/Semaphore.h"
+#include "header/uARMtypes.h"
+#include "header/libuarm.h"
+#include "header/Alloc.h"
+#include "header/Queue.h"
+#include "header/Tree.h"
+#include "header/Semaphore.h"
 
 //#include "pcb.h"
 //#include "asl.h"
@@ -404,7 +404,7 @@ int main() {
 
 	addokbuf("ASL module OK\n");
 	addokbuf("1f u c4n r34d th1s 1t m34ns th4t y430s m19ht w0rk\n");
-	addokbuf("\n");
+		addokbuf("\n");
 
 	return 0;
 }

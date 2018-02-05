@@ -1,4 +1,4 @@
-#include "Tree.h"
+#include "../header/Tree.h"
 
 pcb_t *temp ;
 bool init = FALSE ;

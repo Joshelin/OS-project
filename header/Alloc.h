@@ -1,4 +1,7 @@
-#include "../PCB.h"
+#ifndef ALLOC_H
+#define ALLOC_H
+
+#include "PCB.h"
 
 /* pcbFree:  lista  dei  PCB  che  sono  liberi o  inutilizzati.
 Testa  della  lista pcbFree.*/
@@ -17,3 +20,5 @@ void freePcb(pcb_t *p);
 /* Restituisce NULL se la pcbFree è vuota.
  Altrimenti rimuove un elemento dalla pcbFree, inizializza tutti i campi (NULL/0) e restituisce l’elemento rimosso.*/
 pcb_t *allocPcb();
+
+#endif

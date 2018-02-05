@@ -1,12 +1,13 @@
-#include "Semaphore.h"
+#include "../header/Semaphore.h"
 
 int j = 0 ;
 semd_t *semdTemp ;
 pcb_t *pcbTemp;
+pcb_t *pcbParent ;
 pcb_t *pcbChild;
 pcb_t *pcbSib;
 bool condition = FALSE;
-bool init = FALSE;
+bool init2 = FALSE;
 
 semd_t* allocSemaphore(){
 	if (semdFree_h == NULL)
@@ -145,14 +146,14 @@ Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descr
 pcb_t* removeBlocked(int *key){
 	if((semdTemp = matchKey(key)) != NULL){ //trovo il semaforo con chiave 'key', se esiste, ritorno il primo pcb in coda, se il pcb ritornato è l'ultimo, libero il semaforo aggiungedolo a 'semdFree'.
 		pcbTemp = semdTemp->s_procQ;
-	semdTemp->s_procQ = pcbTemp->p_next;
-	if(semdTemp->s_procQ == NULL){
-		freeSemaphore(key);
+		semdTemp->s_procQ = pcbTemp->p_next;
+		if(semdTemp->s_procQ == NULL){
+			freeSemaphore(key);
+		}
+		return pcbTemp;
 	}
-	return pcbTemp;
-}
 	else{
-	return NULL;
+		return NULL;
 	}
 }
 
@@ -205,17 +206,17 @@ void outPcbBlocked(pcb_t *p){
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
 (La hash table deve essere aggiornata in modo coerente).*/
 void outChildBlocked(pcb_t *p){
-	if(!init){
+	if(!init2){
 		pcbParent = p; // Salvo chi è il parent per poi poter fare outChild nel caso sia figlio di qualcuno.
-		init = TRUE;
+		init2 = TRUE;
 	}
 	if(p->p_first_child != NULL){ // Scendo fino all'ultimo figlio, Es. Se parto dal nonno, comincio a togliere dai semafori e dall'albero i nipoti, poi i fratelli dei nipoti, poi il genitore e così via.
 		outChildBlocked(p->p_first_child);
-	}
+}
 	if(p == pcbParent){ // Entro solo se ho già tolto tutti e rimane solo il parent. NB: Il parent originale potrebbe essere figlio di qualcuno o avere dei fratelli.
 		outChild(pcbParent);
 		outPcbBlocked(pcbParent);
-		init = FALSE;
+		init2 = FALSE;
 	}
 	else{
 		pcbSib = p->p_sib; // Salvo il fratello del p che sto togliendo perchè removeChild, giustamente, toglie i puntatori ai fratelli.

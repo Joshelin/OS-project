@@ -1,4 +1,8 @@
-#include "../PCB.h"
+
+#ifndef QUEUE_H
+#define QUEUE_H
+
+#include "PCB.h"
 
 /* Inserisce l’elemento puntato da p nella coda dei processi puntata da head.
 L’inserimento deve avvenire tenendo conto della priorità di ciascun pcb (campo  p- ‐>priority).
@@ -21,3 +25,5 @@ pcb_t* outProcQ(pcb_t **head, pcb_t *p);
 
 // Richiama la funzione fun per ogni elemento della lista puntata da head.
 void forallProcQ(pcb_t *head, void (*fun)(pcb_t *pcb, void *), void *arg);
+
+#endif

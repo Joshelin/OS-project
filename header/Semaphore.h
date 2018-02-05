@@ -3,8 +3,8 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H 
 
-#include "../PCB.h"
-#include "../PCBTree/Tree.h"
+#include "PCB.h"
+#include "Tree.h"
 
 /* Ad  ogni  semaforo  è  associato  un  descrittore (SEMD)  con  la  struttura  seguente.
 s_key è l'indirizzo della variabile intera che contiene il valore del semaforo.
@@ -68,7 +68,7 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg);
 // Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato.
 void outPcbBlocked(pcb_t *p);
 
-/* Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato. <--- NEL MAIN VUOLE CHE VENGANO RIMOSSI TUTTI I FIGLI, NIPOTI, ETC... DI P.
+/* Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato.
 (La hash table deve essere aggiornata in modo coerente).*/
 void outChildBlocked(pcb_t *p);
 
