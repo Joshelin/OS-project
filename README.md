@@ -12,18 +12,22 @@
 
 <h3>AUTHORS</h3>
 <table>
+  <!--primo-->
   <tr>
     <td>Lorenzo Borelli</td>
     <td>0000789622</td>
   </tr>
+  <!--secondo-->
   <tr>
     <td>Federico Biagi</td>
     <td>0000758635</td>
   </tr>
+  <!--terzo-->
   <tr>
     <td>Yihong Chen</td>
     <td>0000801605</td>
   </tr>
+  <!--end table-->
 </table>
 
 <hr>
