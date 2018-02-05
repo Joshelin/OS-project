@@ -43,7 +43,7 @@
 -Tree.c
 -Semaphore.c
 </pre>
-<h4>Abbiamo creato una directory "header" per tutti i file .h:<h4>
+<h4>Abbiamo creato una directory "header" per tutti i file .h:</h4>
 <pre>
 -Alloc.h 
 -Queue.h
