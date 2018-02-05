@@ -391,7 +391,7 @@ int main() {
 	/*i'm expecting that the child 2 has no children*/
 	if(removeBlocked(&sem[2])!= NULL)
 		adderrbuf("ERROR: removeBlocked(): nonNULL for a nonexistent queue (2)  ");
-	if(removeBlocked(&sem[3])!= NULL) //kernel panic, debugger nota che hashsemd[5] non è NULL e quindi rimuove qualcosa quando non dovrebbe
+	if(removeBlocked(&sem[3])!= NULL) 
 		adderrbuf("ERROR: removeBlocked(): nonNULL for a nonexistent queue (3)  ");
 	if(removeBlocked(&sem[4])!= NULL)
 		adderrbuf("ERROR: removeBlocked(): nonNULL for a nonexistent queue (4)  ");

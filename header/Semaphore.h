@@ -5,6 +5,7 @@
 
 #include "PCB.h"
 #include "Tree.h"
+#include "Queue.h"
 
 /* Ad  ogni  semaforo  è  associato  un  descrittore (SEMD)  con  la  struttura  seguente.
 s_key è l'indirizzo della variabile intera che contiene il valore del semaforo.
