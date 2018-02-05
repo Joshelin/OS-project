@@ -12,7 +12,7 @@ void insertProcQ(pcb_t **head, pcb_t *p){
 			*head = p;
 		}
 		else {
-			(*head)->p_next = p ;			
+			(*head)->p_next = p ;		
 		}
 	}
 	else {
