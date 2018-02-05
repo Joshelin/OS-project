@@ -1,5 +1,5 @@
-#include "Alloc.h"
-#include "../uARMtypes.h"
+#include "../header/Alloc.h"
+#include "../header/uARMtypes.h"
 // variabili globali qui
 int i = 0;
 pcb_t *temp;
