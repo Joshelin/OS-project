@@ -1,10 +1,10 @@
 #include "../header/Alloc.h"
 #include "../header/uARMtypes.h"
 // variabili globali qui
-int i = 0;
-pcb_t *temp;
-bool flag = FALSE; //condizione per capire se pcb è già presente nella lista dei pcbfree
-bool start = TRUE; //condizione per vedere se pcb puntato da p è la testa
+static int i = 0;
+static pcb_t *temp;
+static bool flag = FALSE; //condizione per capire se pcb è già presente nella lista dei pcbfree
+static bool start = TRUE; //condizione per vedere se pcb puntato da p è la testa
 
 void initPcbs() {
 	// Solo per lista ancora vuota.

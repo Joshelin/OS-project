@@ -1,7 +1,7 @@
 #include "../header/Tree.h"
 
-pcb_t *temp ;
-bool init = FALSE ;
+static pcb_t *temp ;
+static bool init = FALSE ;
 
 void insertChild(pcb_t *parent, pcb_t *p){
 

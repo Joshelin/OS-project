@@ -1,14 +1,22 @@
 #include "../header/Semaphore.h"
 
-int j = 0;
-semd_t *semdTemp;
-pcb_t *pcbTemp;
-pcb_t *pcbParent;
-pcb_t *pcbSib;
-bool condition = FALSE;
-bool init2 = FALSE;
+static int i = 0;
+static semd_t *semdTemp;
+static pcb_t *pcbTemp;
+static pcb_t *pcbSib;
+static bool init = FALSE;
 
-semd_t* allocSemaphore(){
+// Calcolo a caso che ritorni un valore tra 0 e ASHDSIZE.
+static int hash(int* key){ 
+	const int a = 11;
+	const int b = 1;
+	long longKey = (long)key;
+	longKey = ((a*longKey)+b)%MAXSEMD;
+	return (int)longKey%ASHDSIZE;
+}
+
+// Alloca un semaforo dalla semdFree e lo mette nella ASHT
+static semd_t* allocSemaphore(){
 	if (semdFree_h == NULL)
 		return NULL ;
 	else if (semdFree_h->s_next == NULL) { // Ultimo semaforo libero, la lista semdFree diventa vuota.
@@ -25,9 +33,10 @@ semd_t* allocSemaphore(){
 		return semdTemp;
 	}
 }
-// NB: freeSemaphore viene invocata SOLO quando è sicuro che il semaforo può esser rimosso.
-void freeSemaphore(int *key){
-	if(!condition){
+/* Rimuovi il semaforo dalla ASHT, aggiornando la ASHT, e lo inserisce nella semdFree.
+NB: freeSemaphore viene invocata SOLO quando è sicuro (Coda pcb vuota) che il semaforo può esser rimosso.*/
+static void freeSemaphore(int *key){
+	if(!init){
 		if(semdhash[hash(key)]->s_key == key){ // se il semaforo da liberare è il primo della lista in 'semdhash[hash(key)]' lo aggiungo in testa a semdFree e lo rimuovo da ASHT
 			semdTemp = semdhash[hash(key)];
 		semdhash[hash(key)] = semdhash[hash(key)]->s_next;
@@ -36,7 +45,7 @@ void freeSemaphore(int *key){
 		return;
 	}
 	semdTemp = semdhash[hash(key)];
-	condition = TRUE;
+	init = TRUE;
 }
 // temp è un altro puntatore (locale), necessario per inserire il semaforo in semdFree. semdTemp è usato per scorrere la lista in semdhash[hash(key)];
 	if(semdTemp->s_next->s_key == key){ // se ho trovato il semaforo da liberare, lo aggiungo in testa a semdFree e lo rimuovo da ASHT.
@@ -44,7 +53,7 @@ void freeSemaphore(int *key){
 		semdTemp->s_next = semdTemp->s_next->s_next;
 		temp->s_next = semdFree_h;
 		semdFree_h = temp;
-		condition = FALSE;
+		init = FALSE;
 	}
 	else{
 		semdTemp = semdTemp->s_next;
@@ -52,35 +61,37 @@ void freeSemaphore(int *key){
 	}
 }
 
-int hash(int* key){ // Calcolo a caso che ritorni un valore tra 0 e ASHDSIZE.
-	const int a = 11;
-	const int b = 1;
-	long longKey = (long)key;
-	longKey = ((a*longKey)+b)%MAXSEMD;
-	return (int)longKey%ASHDSIZE;
-}
+// Ritorno puntatore al semaforo con s_key = key.
+static semd_t* matchKey(int* key){
 
-semd_t* matchKey(int* key){
-
-    if (!condition) {  // inizializzazione.
+    if (!init) {  // inizializzazione.
 		if (semdhash[hash(key)] == NULL){ // Se semdhash[hash(key)] non ha semafori, ovviamente non è già bloccato.
 			return NULL;
 		}
 		semdTemp = semdhash[hash(key)];
-		condition = TRUE;
+		init = TRUE;
 	}
 	if (semdTemp->s_key == key){ // ho trovato il semaforo con chiave key, lo ritorno.
-		condition = FALSE;
+		init = FALSE;
 		return semdTemp;
 	}
 	else if(semdTemp->s_next == NULL) { // sono arrivato alla coda senza trovare il semaforo con chiave key.
-		condition = FALSE;
+		init = FALSE;
 		return NULL;
 	}
 	else{
 		semdTemp = semdTemp->s_next;
 		return matchKey(key);
 	}
+}
+
+static void outPcbBlocked(pcb_t *p){
+	if(p == NULL)
+		return;
+	semdTemp = matchKey(p->p_semKey);
+	(outProcQ(&(semdTemp->s_procQ),p))->p_semKey = NULL;
+	if(semdTemp->s_procQ == NULL) // se il p che ho tolto era l'ultimo del semaforo, libero il semaforo.
+		freeSemaphore(semdTemp->s_key);
 }
 
 int insertBlocked(int *key, pcb_t *p){
@@ -147,28 +158,19 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
 	forallProcQ(semdTemp->s_procQ,fun,arg);
 }
 
-void outPcbBlocked(pcb_t *p){
-	if(p == NULL)
-		return;
-	semdTemp = matchKey(p->p_semKey);
-	(outProcQ(&(semdTemp->s_procQ),p))->p_semKey = NULL;
-	if(semdTemp->s_procQ == NULL) // se il p che ho tolto era l'ultimo del semaforo, libero il semaforo.
-		freeSemaphore(semdTemp->s_key);
-}
-
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
 (La hash table deve essere aggiornata in modo coerente).*/
 void outChildBlocked(pcb_t *p){
-	if(!init2){
-		pcbParent = p; // Salvo chi è il parent per poi poter fare outChild nel caso sia figlio di qualcuno.
-		init2 = TRUE;
+	if(!init){
+		pcbTemp = p; // Salvo chi è il parent per poi poter fare outChild nel caso sia figlio di qualcuno.
+		init = TRUE;
 	}
 	if(p->p_first_child != NULL){ // Scendo fino all'ultimo figlio, Es. Se parto dal nonno, comincio a togliere dai semafori e dall'albero i nipoti, poi i fratelli dei nipoti, poi il genitore e così via.
 		outChildBlocked(p->p_first_child);
 }
-	if(p == pcbParent){ // Entro solo se ho già tolto tutti e rimane solo il parent. NB: Il parent originale potrebbe essere figlio di qualcuno o avere dei fratelli.
-		outPcbBlocked(outChild(pcbParent));
-		init2 = FALSE;
+	if(p == pcbTemp){ // Entro solo se ho già tolto tutti e rimane solo il parent. NB: Il parent originale potrebbe essere figlio di qualcuno o avere dei fratelli.
+		outPcbBlocked(outChild(pcbTemp));
+		init = FALSE;
 	}
 	else{
 		pcbSib = p->p_sib; // Salvo il fratello del p che sto togliendo perchè removeChild, giustamente, toglie i puntatori ai fratelli.
@@ -179,19 +181,18 @@ void outChildBlocked(pcb_t *p){
 	}
 }
 
-
 void initASL(){
-	if (j == 0){
-		semdFree_h = &semd_table[j++];
+	if (i == 0){
+		semdFree_h = &semd_table[i++];
 		semdTemp = semdFree_h ;
 	}
-	if (j < MAXSEMD) {  
-		semdTemp->s_next = &semd_table[j++];
+	if (i < MAXSEMD) {  
+		semdTemp->s_next = &semd_table[i++];
 		semdTemp = semdTemp->s_next;
 		initASL();
 	}
-	if (j == MAXSEMD){
+	if (i == MAXSEMD){
 		semdTemp->s_next = NULL;
-		j = 0 ;
+		i = 0 ;
 	}
 }
