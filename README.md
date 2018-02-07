@@ -2,15 +2,15 @@
 
 <h1 align="center">YAEOS</h1>
 
-<h3>INTRODUCTION</h3>
-<p>Progetto accademico basato sul processore emulato <b>uARM</b>.<p>
-<p>Occorre installare <b>uARM</b> per testare progetto.</p>
-<h3>Github repository:</h3>
+<h2>INTRODUCTION</h2>
+<p>Sistema Operativo accademico basato su processore <b>ARM7TDMI</b> emulato.<p>
+<p>Occorre installare <a href="https://github.com/mellotanica/uARM/releases"><b>µARM</b></a> per testare il progetto.</p>
+<h3>Github:</h3>
 <p>https://github.com/Plutone11011/OS-project<p>
 
 <hr>
 
-<h3>AUTHORS</h3>
+<h2>AUTHORS</h2>
 <table>
   <!--primo-->
   <tr>
@@ -32,22 +32,23 @@
 
 <hr>
 
-<h3>COMPILAZIONE/LINKING</h3>
-<p><b><em>Usare makefile, digitando make.</em></b></p>
+<h2>COMPILAZIONE/LINKING</h2>
+<p>Dopo aver installato µARM ed i relativi pacchetti (Vedi <a href="https://github.com/mellotanica/uARM#readme">Readme</a>). <br>
+  Compilare usando <em><b>Makefile</b></em>, digitando <em><b>make</b></em>.<br>
+  L'eseguibile si chiamerà <b>main</b>.</p>
 
 <hr>
 
-<h3>SCELTE PROGETTUALI<h3>
-
-<h4>Abbiamo creato una directory "src" per tutti i file sorgente:</h4> 
+<h2>SCELTE PROGETTUALI<h2>
+<h3>Abbiamo suddiviso il progetto in 2 cartelle principali</h3>
+<h4>"src" per tutti i file sorgente:</h4>
 <pre>
--main.c
 -Alloc.c 
 -Queue.c
 -Tree.c
 -Semaphore.c
 </pre>
-<h4>Abbiamo creato una directory "header" per tutti i file .h:</h4>
+<h4>"header" per tutti i file header:</h4>
 <pre>
 -Alloc.h 
 -Queue.h
@@ -59,6 +60,17 @@
 -PCB.h
 </pre>
 
-<hr>
+<h4>Alloc</h4>
+<p>Gestisce i pcb (Process control block), consentendo di allocarli e deallocarli.</p>
 
+<h4>Queue</h4>
+<p>Gestisce code di pcb allocati con priorità decrescente.</p>
+
+<h4>Tree</h4>
+<p>Gestisce alberi di pcb allocati.</p>
+
+<h4>Semaphore</h4>
+<p>Gestisce i semafori tramite una Hash table.<br>
+Ogni semaforo consente di bloccare e/o liberare pcb (thread) concorrenti tramite mutua esclusione con priorità (Usando Queue.c).<br>
+Consente inoltre di liberare l'esecuzione di un pcb e tutti i suoi figli (thread), 'bypassando' la coda (Terminate process tree).</p>
 <p align="right"><b><em>To be continued!!!</em></b></p>
