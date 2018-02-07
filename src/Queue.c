@@ -1,6 +1,6 @@
 #include "../header/Queue.h"
 
-pcb_t *temp;
+static pcb_t *temp;
 
 void insertProcQ(pcb_t **head, pcb_t *p){ 
 	if (*head == NULL) { //lista vuota
