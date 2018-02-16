@@ -89,7 +89,8 @@ static void outPcbBlocked(pcb_t *p){
 	if(p == NULL)
 		return;
 	semdTemp = matchKey(p->p_semKey);
-	(outProcQ(&(semdTemp->s_procQ),p))->p_semKey = NULL;
+	pcb_t* tmp = outProcQ(&(semdTemp->s_procQ),p) ;
+	tmp->p_semKey = NULL;
 	if(semdTemp->s_procQ == NULL) // se il p che ho tolto era l'ultimo del semaforo, libero il semaforo.
 		freeSemaphore(semdTemp->s_key);
 }
@@ -175,7 +176,7 @@ void outChildBlocked(pcb_t *p){
 	else{
 		pcbSib = p->p_sib; // Salvo il fratello del p che sto togliendo perchè removeChild, giustamente, toglie i puntatori ai fratelli.
 		outPcbBlocked(removeChild(p->p_parent)); 
-		if(p->p_sib!=NULL){
+		if(pcbSib!=NULL){
 			outChildBlocked(pcbSib); // Ripeto sul fratello che a questo punto è il first_child del parent attuale.
 		}
 	}
