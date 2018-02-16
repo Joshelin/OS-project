@@ -120,7 +120,7 @@ else{
 			semdhash[hash(key)] = semdTemp ;
 			semdhash[hash(key)]->s_key = key ;
 			p->p_semKey = key ;
-			insertProcQ(&(semdTemp->s_procQ),p);
+			insertProcQ(&(semdhash[hash(key)]->s_procQ),p);
 			return 0 ;
 		}
 	}
@@ -170,7 +170,7 @@ void outChildBlocked(pcb_t *p){
 	if(p->p_first_child != NULL){ // Scendo fino all'ultimo figlio, Es. Se parto dal nonno, comincio a togliere dai semafori e dall'albero i nipoti, poi i fratelli dei nipoti, poi il genitore e così via.
 		outChildBlocked(p->p_first_child);
 }
-	if(p = pcbParent){ // Entro solo se ho già tolto tutti e rimane solo il parent. NB: Il parent originale potrebbe essere figlio di qualcuno o avere dei fratelli.
+	if(p == pcbParent){ // Entro solo se ho già tolto tutti e rimane solo il parent. NB: Il parent originale potrebbe essere figlio di qualcuno o avere dei fratelli.
 		outPcbBlocked(outChild(pcbParent));
 		init = FALSE;
 	}
