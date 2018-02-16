@@ -52,11 +52,8 @@ pcb_t* outProcQ(pcb_t **head, pcb_t *p){
 	if (*head == NULL)
 		return NULL ;
 	if (*head == p){ //si dovrebbe usare removeProcQ, in ogni caso entra solo se p è la testa 
-		*head = (*head)->p_next ;
-		p->priority = 0 ;
-		p->p_next = NULL ;
-		return p ;
-	}
+		return removeProcQ(head);
+ 	}
 	else {
 		if ((*head)->p_next == p){
 			(*head)->p_next = p->p_next ;
