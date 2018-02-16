@@ -6,6 +6,7 @@ static pcb_t *pcbTemp;
 static pcb_t *pcbSib;
 static pcb_t *pcbParent ;
 static bool init = FALSE;
+static pcb_t *pcbChild ;
 
 // Calcolo a caso che ritorni un valore tra 0 e ASHDSIZE.
 static int hash(int* key){ 
@@ -176,10 +177,13 @@ void outChildBlocked(pcb_t *p){
 	}
 	else{
 		pcbSib = p->p_sib; // Salvo il fratello del p che sto togliendo perchè removeChild, giustamente, toglie i puntatori ai fratelli.
-		outPcbBlocked(removeChild(p->p_parent)); 
-		if(pcbSib!=NULL){
-			outChildBlocked(pcbSib); // Ripeto sul fratello che a questo punto è il first_child del parent attuale.
-		}
+		pcbChild = removeChild(p->p_parent); 
+		if (pcbChild != NULL){
+			outPcbBlocked(pcbChild); 
+			if(pcbSib!=NULL){
+				outChildBlocked(pcbSib); // Ripeto sul fratello che a questo punto è il first_child del parent attuale.
+			}
+		}	
 	}
 }
 
