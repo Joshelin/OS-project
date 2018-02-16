@@ -133,6 +133,7 @@ pcb_t* removeBlocked(int *key){
 	if(semdTemp->s_procQ == NULL){
 		freeSemaphore(key);
 	}
+	pcbTemp->p_semKey = NULL ;
 	return pcbTemp;
 }
 else{
