@@ -4,6 +4,7 @@ static int i = 0;
 static semd_t *semdTemp;
 static pcb_t *pcbTemp;
 static pcb_t *pcbSib;
+static pcb_t *pcbParent ;
 static bool init = FALSE;
 
 // Calcolo a caso che ritorni un valore tra 0 e ASHDSIZE.
@@ -163,14 +164,14 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
 (La hash table deve essere aggiornata in modo coerente).*/
 void outChildBlocked(pcb_t *p){
 	if(!init){
-		pcbTemp = p; // Salvo chi è il parent per poi poter fare outChild nel caso sia figlio di qualcuno.
+		pcbParent = p; // Salvo chi è il parent per poi poter fare outChild nel caso sia figlio di qualcuno.
 		init = TRUE;
 	}
 	if(p->p_first_child != NULL){ // Scendo fino all'ultimo figlio, Es. Se parto dal nonno, comincio a togliere dai semafori e dall'albero i nipoti, poi i fratelli dei nipoti, poi il genitore e così via.
 		outChildBlocked(p->p_first_child);
 }
-	if(p == pcbTemp){ // Entro solo se ho già tolto tutti e rimane solo il parent. NB: Il parent originale potrebbe essere figlio di qualcuno o avere dei fratelli.
-		outPcbBlocked(outChild(pcbTemp));
+	if(p = pcbParent){ // Entro solo se ho già tolto tutti e rimane solo il parent. NB: Il parent originale potrebbe essere figlio di qualcuno o avere dei fratelli.
+		outPcbBlocked(outChild(pcbParent));
 		init = FALSE;
 	}
 	else{
