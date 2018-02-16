@@ -101,7 +101,7 @@ void enqueuePcb(semd_t *semaforo, pcb_t *p){
 int insertBlocked(int *key, pcb_t *p){
 	if((semdTemp = matchKey(key)) != NULL){ // se eiste già un semaforo con chiave 'key', aggiungo il pcb in coda a tale semaforo.
 		insertProcQ(&(semdTemp->s_procQ),p);
-		p->p_semKey = key ; 
+	p->p_semKey = key ; 
 	return 0;
 }
 else{
@@ -144,15 +144,15 @@ Altrimenti, restituisce l’elemento  rimosso.
 Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore corrispondente dalla  ASHT e lo inserisce nella coda dei descrittori liberi (semdFree).*/
 pcb_t* removeBlocked(int *key){
 	if((semdTemp = matchKey(key)) != NULL){ //trovo il semaforo con chiave 'key', se esiste, ritorno il primo pcb in coda, se il pcb ritornato è l'ultimo, libero il semaforo aggiungedolo a 'semdFree'.
-		pcbTemp = removeProcQ(&(semdTemp->s_procQ));
-		if(semdTemp->s_procQ == NULL){
-			freeSemaphore(key);
-		}
-		return pcbTemp;
+		pcbTemp = (pcb_t*)removeProcQ(&(semdTemp->s_procQ));
+	if(semdTemp->s_procQ == NULL){
+		freeSemaphore(key);
 	}
-	else{
-		return NULL;
-	}
+	return pcbTemp;
+}
+else{
+	return NULL;
+}
 }
 
 // Richiama la funzione fun per ogni processo bloccato sul semaforo identificato da key.
@@ -173,32 +173,11 @@ void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg){
 }
 
 void outPcbBlocked(pcb_t *p){
-	if (!condition){
 		semdTemp = matchKey(p->p_semKey); //poiché ho come parametro p, invece che key, uso semKey di pcb_t per trovare il semaforo.
-		if(semdTemp == NULL)
-			return;
-		pcbTemp = semdTemp->s_procQ;
-		if (pcbTemp == p){ // Se il p che sto cercando è il primo in coda, lo tolgo subito.
-			semdTemp->s_procQ = pcbTemp->p_next;
-			pcbTemp->p_next = NULL;
-			pcbTemp->p_semKey = NULL;
-			if(semdTemp->s_procQ == NULL) // se il p che ho tolto era l'ultimo del semaforo, libero il semaforo.
-				freeSemaphore(semdTemp->s_key);
-			return;
-		}
-		condition = TRUE ;
-	}
-	if (pcbTemp->p_next == p){ // Scorrendo ho trovato il pcb, lo tolgo mantenendo la coda inalterata.
-		pcb_t *temp = pcbTemp->p_next;
-		pcbTemp->p_next = pcbTemp->p_next->p_next;
-		temp->p_next = NULL;
-		temp->p_semKey = NULL;
-		condition = FALSE ;
-	}
-	else{
-		pcbTemp = pcbTemp->p_next ;
-		outPcbBlocked(p);
-	}
+		pcbTemp = (pcb_t*)outProcQ(&(semdTemp->s_procQ),p);
+		pcbTemp->p_semKey = NULL;
+		if(semdTemp->s_procQ == NULL) // se il p che ho tolto era l'ultimo del semaforo, libero il semaforo.
+			freeSemaphore(semdTemp->s_key);
 }
 
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è  bloccato.
