@@ -100,7 +100,8 @@ void enqueuePcb(semd_t *semaforo, pcb_t *p){
 
 int insertBlocked(int *key, pcb_t *p){
 	if((semdTemp = matchKey(key)) != NULL){ // se eiste già un semaforo con chiave 'key', aggiungo il pcb in coda a tale semaforo.
-		enqueuePcb(semdTemp, p);
+		insertProcQ(&(semdTemp->s_procQ),p);
+		p->p_semKey = key ; 
 	return 0;
 }
 else{
@@ -112,8 +113,7 @@ else{
 			semdhash[hash(key)] = semdTemp ;
 			semdhash[hash(key)]->s_next = NULL ;
 			semdhash[hash(key)]->s_key = key ;
-			semdhash[hash(key)]->s_procQ = p ;
-			p->p_next = NULL;
+			insertProcQ(&(semdhash[hash(key)]->s_procQ),p) ;
 			p->p_semKey = key ;
 			return 0 ;
 		}
@@ -121,8 +121,7 @@ else{
 			semdTemp->s_next = semdhash[hash(key)] ;
 			semdhash[hash(key)] = semdTemp ;
 			semdhash[hash(key)]->s_key = key ;
-			semdhash[hash(key)]->s_procQ = p ;
-			p->p_next = NULL;
+			insertProcQ(&(semdhash[hash(key)]->s_procQ), p) ;
 			p->p_semKey = key ;
 			return 0 ;
 		}
@@ -145,8 +144,7 @@ Altrimenti, restituisce l’elemento  rimosso.
 Se la coda dei processi bloccati per il semaforo diventa vuota, rimuove il descrittore corrispondente dalla  ASHT e lo inserisce nella coda dei descrittori liberi (semdFree).*/
 pcb_t* removeBlocked(int *key){
 	if((semdTemp = matchKey(key)) != NULL){ //trovo il semaforo con chiave 'key', se esiste, ritorno il primo pcb in coda, se il pcb ritornato è l'ultimo, libero il semaforo aggiungedolo a 'semdFree'.
-		pcbTemp = semdTemp->s_procQ;
-		semdTemp->s_procQ = pcbTemp->p_next;
+		pcbTemp = removeProcQ(&(semdTemp->s_procQ));
 		if(semdTemp->s_procQ == NULL){
 			freeSemaphore(key);
 		}
