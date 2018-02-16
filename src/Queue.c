@@ -1,6 +1,6 @@
 #include "../header/Queue.h"
 
-pcb_t *temp;
+static pcb_t *temp;
 
 void insertProcQ(pcb_t **head, pcb_t *p){ 
 	if (*head == NULL) { //lista vuota
@@ -12,7 +12,7 @@ void insertProcQ(pcb_t **head, pcb_t *p){
 			*head = p;
 		}
 		else {
-			(*head)->p_next = p ;			
+			(*head)->p_next = p ;		
 		}
 	}
 	else {
@@ -51,11 +51,8 @@ pcb_t* removeProcQ(pcb_t **head){
 pcb_t* outProcQ(pcb_t **head, pcb_t *p){
 	if (*head == NULL)
 		return NULL ;
-	if (*head == p){ //si dovrebbe usare removeProcQ, in ogni caso entra solo se p è la testa 
-		*head = (*head)->p_next ;
-		p->priority = 0 ;
-		p->p_next = NULL ;
-		return p ;
+	if (*head == p){ // rimuovo il primo elemento.
+		return removeProcQ(head);
 	}
 	else {
 		if ((*head)->p_next == p){

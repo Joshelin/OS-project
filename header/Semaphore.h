@@ -5,6 +5,7 @@
 
 #include "PCB.h"
 #include "Tree.h"
+#include "Queue.h"
 
 /* Ad  ogni  semaforo  è  associato  un  descrittore (SEMD)  con  la  struttura  seguente.
 s_key è l'indirizzo della variabile intera che contiene il valore del semaforo.
@@ -29,23 +30,6 @@ semd_t *semdhash[ASHDSIZE];
 
 /* Funzioni */
 
-//PRIVATE
-
-//alloca semaforo dalla lista dei semafori liberi
-semd_t* allocSemaphore();
-
-//libera il semaforo inserendolo nella lista dei semafori liberi
-void freeSemaphore(int *key);
-
-//cerca chiave nelle liste di trabocco se c'è già
-semd_t* matchKey(int* key);
-
-//inserisce il pcb nella coda s_procQ del semaforo.
-void enqueuePcb(semd_t *semaforo, pcb_t *p);
-
-
-//PUBLIC
-
 /* Viene inserito il PCB puntato da  p nella coda dei processi  bloccati  associata  al semaforo con chiave key.
 Se il semaforo corrispondente non è  presente nella ASHT, alloca un nuovo SEMD dalla lista di quelli liberi e lo inserisce nella  ASHT, settando i campi in maniera opportuna.
 Se non è possibile allocare un nuovo SEMD perché la  lista  di quelli liberi e’ vuota, restituisce -1.
@@ -64,9 +48,6 @@ pcb_t* removeBlocked(int *key);
 
 // Richiama la funzione fun per ogni processo bloccato sul semaforo identificato da key.
 void forallBlocked(int *key, void (*fun)(pcb_t *pcb, void *), void *arg);
-
-// Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato.
-void outPcbBlocked(pcb_t *p);
 
 /* Rimuove il PCB puntato da p dalla coda del semaforo su cui è bloccato.
 (La hash table deve essere aggiornata in modo coerente).*/
