@@ -1,6 +1,6 @@
 #include "../header/Semaphore.h"
 
-int j = 0 ;
+static int j = 0 ;
 semd_t *semdTemp ;
 pcb_t *pcbTemp;
 pcb_t *pcbParent ;
@@ -186,7 +186,7 @@ void outChildBlocked(pcb_t *p){
 		pcbChild = removeChild(p->p_parent);
 		if(pcbChild != NULL){ 
 			outPcbBlocked(pcbChild); 
-			if(p->p_sib!=NULL){
+			if(pcbSib!=NULL){
 				outChildBlocked(pcbSib); // Ripeto sul fratello che a questo punto è il first_child del parent attuale.
 			}
 		}
