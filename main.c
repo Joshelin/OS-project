@@ -196,7 +196,7 @@ int main() {
 	addokbuf("Testing process trees...\n");
 
 	/*check that it has no child*/
-	q = (pcb_t*)removeChild(procp[2]);	
+	q = removeChild(procp[2]);	
 	if (q!=NULL )
 		adderrbuf("ERROR: emptyChild: unexpected FALSE\n");
 	/*if the test is passed, then the node has no child at all*/
@@ -242,7 +242,7 @@ int main() {
 	addokbuf("Outchild executed on 1\n");
 	if (q == NULL || q != procp[1])
 		adderrbuf("ERROR: outChild(procp[1]) failed\n");
-	q = (pcb_t*)outChild(procp[8]);
+	q = outChild(procp[8]);
 	addokbuf("Outchild executed on 8\n");
 	if (q == NULL || q != procp[8])
 		adderrbuf("ERROR: outChild(procp[8]) failed\n");
